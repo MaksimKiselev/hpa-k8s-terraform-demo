@@ -11,9 +11,21 @@ app.get('/', function (req, res) {
 
     // bq.dataset().table('events').insert(req.query)
 
+    res.json({
+        res: fact(100_000_000)
+    })
     res.status(200);
-    res.send();
 
 })
 
 app.listen(3000)
+
+
+function fact(num: number) {
+    let rval = 1;
+    for (let i = 2; i <= num; i++) {
+        rval = rval * i;
+    }
+
+    return rval;
+}

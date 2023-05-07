@@ -1,3 +1,3 @@
 variable "events_endpoint_docker_image" {
-  default = ""
+  default = "ghcr.io/maksimkiselev/events-endpoint:latest"
 }
