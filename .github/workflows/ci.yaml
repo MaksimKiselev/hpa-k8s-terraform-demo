@@ -33,4 +33,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/MaksimKiselev/events-endpoint:latest
+            ghcr.io/maksimkiselev/events-endpoint:latest
