@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 0.13"
+
+  required_providers {
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
+  }
+}
+
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
@@ -30,18 +41,18 @@ resource "kubernetes_deployment" "events_endpoint" {
         container {
           name              = "events-endpoint"
           image             = var.events_endpoint_docker_image
-          image_pull_policy = "Always"
+          image_pull_policy = "IfNotPresent"
           command           = [
             "npm",
             "start"
           ]
           resources {
             requests = {
-              cpu    = "10m"
+              cpu    = "100m"
               memory = "50Mi"
             }
             limits = {
-              cpu    = "20m"
+              cpu    = "200m"
               memory = "75Mi"
             }
           }
@@ -101,10 +112,11 @@ resource "kubernetes_horizontal_pod_autoscaler" "events_endpoint" {
   }
 
   spec {
-    max_replicas = 10
-    min_replicas = kubernetes_deployment.events_endpoint.spec[0].replicas
+    max_replicas                      = 10
+    min_replicas                      = kubernetes_deployment.events_endpoint.spec[0].replicas
     target_cpu_utilization_percentage = 80
     scale_target_ref {
+      api_version = "apps/v1"
       kind = "Deployment"
       name = kubernetes_deployment.events_endpoint.metadata[0].name
     }
